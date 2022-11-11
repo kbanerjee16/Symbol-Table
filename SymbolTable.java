@@ -5,6 +5,7 @@ public class SymbolTable <Key extends Comparable<Key>, Value> {
         Value v;
         Node left;
         Node right;
+		int size;
 
         public Node(Key k, Value v) {
             this.k = k;
@@ -32,7 +33,48 @@ public class SymbolTable <Key extends Comparable<Key>, Value> {
             if (x == null)
 				return null;
         }
+		
+		private int size(Node x) {
+			//give size of tree x
+		}
+		
+		private Node deleteMin(Node x) {
+			if (x == null)
+				return null;
+			if (x.left == null)//x is minimum
+				return x.right;
+			x.left = deleteMin(x.left);
+			x.size = size(x.left) + size(x.right) + 1;
+			return x;
+		}
+		
+		private Node delete(Node x, Key k) {
+			if (x == null)
+				return null;
+			int cmp = k.compareTo(x.key);
+			if (cmp < 0) 
+				x.left = delete(x.left, k);
+			else if (cmp > 0)
+				x.right = delete(x.right, k);
+			else {
+				if (x.left == null)
+					return x.right;
+				if (x.right == null)
+					return x.left;
+				Node t = x;
+				x = min(t.right);
+				x.right = deleteMin(t.right);
+				x.left = t.left;
+			}
+			x.size = size(x.left) + size(x.right) + 1;
+			return x;
+			}
+		}
     }
+	
+	public void delete(Key k) {
+		root = delete(root, k);
+	}
 	
 	public Key select(int k) {
 			return select(root, k);
@@ -80,4 +122,8 @@ public class SymbolTable <Key extends Comparable<Key>, Value> {
     public Key ceiling(Key k) {
 
     }
+	
+	public void deleteMin() {
+		root = delMin(root);
+	}
 }
