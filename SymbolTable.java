@@ -70,7 +70,30 @@ public class SymbolTable <Key extends Comparable<Key>, Value> {
 			return x;
 			}
 		}
+		
+		private void keys(Node x, Queue<Key> q, Key lo, Key hi) {//change to arraylist
+			if (x == null)
+				return;
+			int cmplo = lo.compareTo(x.key);
+			int cmphi = hi.compareTo(x.key);
+			if (cmplo < 0) 
+				keys(x.left, q, lo, hi);
+			if (cmplo <= 0 && cmphi >= 0)
+				q.enqueue(x.key);
+			if (comphi > 0)
+				keys(x.right, q, lo, hi);
+		}
     }
+	
+	public Iterable<Key> keys(Key min, Key max) {//range search
+		Queue<Key> q = new Queue<Key>();
+		keys(root, q, min, max);
+		return q;
+	}
+	
+	public Iterable<Key> keys() {//range search
+		return keys(min(), max());
+	}
 	
 	public void delete(Key k) {
 		root = delete(root, k);
